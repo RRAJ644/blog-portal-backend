@@ -24,5 +24,6 @@ app.use((req, res, next) => {
 })
 
 app.use('/', routes?.userRouter)
+app.use('/', routes?.blogRouter)
 
 export { app }
