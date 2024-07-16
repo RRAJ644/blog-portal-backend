@@ -29,8 +29,8 @@ const blogSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ['draft', 'published'],
-      default: 'draft',
+      enum: ['Draft', 'Published'],
+      default: 'Draft',
     },
   },
   {

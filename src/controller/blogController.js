@@ -8,12 +8,13 @@ export const publishBlog = async (req, res) => {
       },
     } = req
     const { body } = req
-    const blog = await Blog.create(body)
+    const blog = await Blog.create({ ...body, status: BLOG_STATUS?.PUBLISHED })
     res.status(200).send(blog)
   } catch (error) {
     res.status(400).send(error)
   }
 }
+
 export const editBlog = async (req, res) => {
   try {
     const {
@@ -94,8 +95,26 @@ export const getBlogs = async (req, res) => {
       .limit(limitInt)
       .sort({ date: -1 })
 
-    res.status(200).json(blogs)
+    res.status(200).send(blogs)
   } catch (error) {
-    res.status(400).send(error.message)
+    res.status(400).send(error)
   }
 }
+
+export const saveAsDraft = async (req, res) => {
+  try {
+    const {
+      context: {
+        models: { Blog },
+      },
+      body,
+    } = req
+    const draft = await Blog.create({ ...body, status: BLOG_STATUS?.DRAFT })
+    res.status(200).send(draft)
+  } catch (error) {
+    res.status(400).send(error)
+  }
+}
+
+
+
