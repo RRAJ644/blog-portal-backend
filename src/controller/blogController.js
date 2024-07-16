@@ -40,10 +40,10 @@ export const deleteBlog = async (req, res) => {
       context: {
         models: { Blog },
       },
-      params: { id },
+      params: { id, slug },
     } = req
 
-    const deletedBlog = await Blog.findByIdAndDelete(id)
+    const deletedBlog = await Blog.findOneAndDelete({ _id: id, slug })
 
     if (!deletedBlog) {
       return res.status(404).send('Blog not found')
@@ -61,10 +61,10 @@ export const getBlog = async (req, res) => {
       context: {
         models: { Blog },
       },
-      params: { id },
+      params: { id, slug },
     } = req
 
-    const blog = await Blog.findById(id)
+    const blog = await Blog.findOne({ _id: id, slug })
     res.status(200).send(blog)
   } catch (error) {
     res.status(400).send(error)
