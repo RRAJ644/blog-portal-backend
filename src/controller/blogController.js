@@ -5,7 +5,9 @@ export const createBlog = async (req, res) => {
         models: { Blog },
       },
     } = req
+    console.log('===in')
     const { body } = req
+    console.log(body, '======body')
     const blog = await Blog.create(body)
     res.status(200).send(blog)
   } catch (error) {

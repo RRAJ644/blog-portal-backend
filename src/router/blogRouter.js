@@ -10,10 +10,10 @@ import {
 
 const blogRouter = express.Router()
 
+blogRouter.get('/blogs', getBlogs)
+blogRouter.get('/:slug', getBlog)
 blogRouter.post('/create', authMiddleware, createBlog)
 blogRouter.put('/edit', authMiddleware, editBlog)
 blogRouter.delete('/delete', authMiddleware, deleteBlog)
-blogRouter.get('/:slug', getBlog)
-blogRouter.get('/blogs', getBlogs)
 
 export default blogRouter

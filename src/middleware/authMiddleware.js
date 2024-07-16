@@ -21,6 +21,7 @@ export const authMiddleware = async (req, res, next) => {
     } = req
 
     const token = req.headers.authorization
+
     if (token) {
       let userData
       if (!token.startsWith('Bearer ')) {
@@ -43,7 +44,6 @@ export const authMiddleware = async (req, res, next) => {
     } else {
       res.status(400).send({ message: 'unauthorized' })
     }
-
   } catch (error) {
     res.status(404).send(error)
   }
