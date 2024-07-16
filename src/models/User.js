@@ -2,20 +2,31 @@ import { Schema, model } from 'mongoose'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
-const userSchema = new Schema({
-  name: {
-    type: String,
+const userSchema = new Schema(
+  {
+    name: {
+      type: String,
+    },
+    email: {
+      type: String,
+    },
+    password: {
+      type: String,
+      minlength: [6, 'Password must be at least 6 characters long'],
+    },
   },
-  email: {
-    type: String,
-  },
-  password: {
-    type: String,
-    minlength: [6, 'Password must be at least 6 characters long'],
-  },
-})
+  { timestamps: true }
+)
 
 userSchema.pre('save', async function (next) {
+  if (this.isNew && this.isModified('email')) {
+    const existingUser = await User.findOne({ email: this.email })
+    if (existingUser) {
+      const error = new Error('User already exists')
+      return next(error)
+    }
+  }
+
   if (!this.isModified('password')) return next()
   this.password = await bcrypt.hash(this.password, 10)
   next()

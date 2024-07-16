@@ -1,3 +1,5 @@
+import bcrypt from 'bcryptjs'
+
 export const register = async (req, res) => {
   try {
     const {
@@ -6,9 +8,12 @@ export const register = async (req, res) => {
       },
     } = req
     const { body } = req
+
     await User.create(body)
-    console.log(body)
-    res.status(200).send(body)
+
+    const user = await User.findOne({ email: body.email }).select('-password')
+
+    res.status(200).send(user)
   } catch (error) {
     console.log(error)
     res.status(400).send(error)
@@ -44,5 +49,77 @@ export const login = async (req, res) => {
   }
 }
 
+export const changePassword = async (req, res) => {
+  try {
+    const {
+      context: {
+        models: { User },
+      },
+      user,
+    } = req
 
+    const {
+      body: { password },
+    } = req
 
+    if (!user?._id) {
+      return res.status(400).send({ error: 'User not found' })
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    const updatedUser = await User.findByIdAndUpdate(
+      user._id,
+      { password: hashedPassword },
+      { new: true }
+    )
+
+    if (!updatedUser) {
+      return res.status(400).send({ error: 'Failed to update password' })
+    }
+
+    res.status(200).send({ message: 'Password updated successfully' })
+  } catch (error) {
+    console.log(error)
+    res.status(400).send({ error: error })
+  }
+}
+
+export const changeEmail = async (req, res) => {
+  try {
+    const {
+      context: {
+        models: { User },
+      },
+      user,
+    } = req
+
+    const {
+      body: { email },
+    } = req
+
+    if (!user?._id) {
+      return res.status(400).send({ error: 'User not found' })
+    }
+
+    const existingUser = await User.findOne({ email })
+    if (existingUser) {
+      return res.status(400).send({ error: 'Email already in use' })
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      user._id,
+      { email },
+      { new: true }
+    )
+
+    if (!updatedUser) {
+      return res.status(400).send({ error: 'Failed to update email' })
+    }
+
+    res.status(200).send({ message: 'Email updated successfully' })
+  } catch (error) {
+    console.log(error)
+    res.status(400).send({ error })
+  }
+}
