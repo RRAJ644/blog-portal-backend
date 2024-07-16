@@ -33,7 +33,7 @@ export const editBlog = async (req, res) => {
 
     res.status(200).send(updatedBlog)
   } catch (error) {
-    res.status(400).send(error.message)
+    res.status(400).send(error)
   }
 }
 
@@ -54,7 +54,7 @@ export const deleteBlog = async (req, res) => {
 
     res.status(200).send({ message: 'Blog deleted successfully' })
   } catch (error) {
-    res.status(400).send(error.message)
+    res.status(400).send(error)
   }
 }
 
