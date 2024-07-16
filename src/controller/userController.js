@@ -15,7 +15,6 @@ export const register = async (req, res) => {
 
     res.status(200).send(user)
   } catch (error) {
-    console.log(error)
     res.status(400).send(error)
   }
 }
@@ -44,7 +43,6 @@ export const login = async (req, res) => {
     const token = existingUser.generateAccessToken()
     res.status(200).send({ token, message: 'User logged in successfully' })
   } catch (error) {
-    console.log(error)
     res.status(400).send(error)
   }
 }
@@ -80,8 +78,7 @@ export const changePassword = async (req, res) => {
 
     res.status(200).send({ message: 'Password updated successfully' })
   } catch (error) {
-    console.log(error)
-    res.status(400).send({ error: error })
+    res.status(400).send(error)
   }
 }
 
@@ -119,7 +116,6 @@ export const changeEmail = async (req, res) => {
 
     res.status(200).send({ message: 'Email updated successfully' })
   } catch (error) {
-    console.log(error)
-    res.status(400).send({ error })
+    res.status(400).send(error)
   }
 }
