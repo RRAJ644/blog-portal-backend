@@ -1,13 +1,13 @@
-export const createBlog = async (req, res) => {
+import { BLOG_STATUS } from '../constants/constants.js'
+
+export const publishBlog = async (req, res) => {
   try {
     const {
       context: {
         models: { Blog },
       },
     } = req
-    console.log('===in')
     const { body } = req
-    console.log(body, '======body')
     const blog = await Blog.create(body)
     res.status(200).send(blog)
   } catch (error) {
@@ -66,7 +66,11 @@ export const getBlog = async (req, res) => {
       params: { id, slug },
     } = req
 
-    const blog = await Blog.findOne({ _id: id, slug })
+    const blog = await Blog.findOne({
+      _id: id,
+      slug,
+      status: BLOG_STATUS?.PUBLISHED,
+    })
     res.status(200).send(blog)
   } catch (error) {
     res.status(400).send(error)
@@ -85,7 +89,7 @@ export const getBlogs = async (req, res) => {
     const skipInt = parseInt(skip, 10)
     const limitInt = parseInt(limit, 10)
 
-    const blogs = await Blog.find()
+    const blogs = await Blog.find({ status: BLOG_STATUS?.PUBLISHED })
       .skip(skipInt)
       .limit(limitInt)
       .sort({ date: -1 })
