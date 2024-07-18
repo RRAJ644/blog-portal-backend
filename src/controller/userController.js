@@ -1,5 +1,14 @@
 import bcrypt from 'bcryptjs'
 
+export const currentUser = async () => {
+  try {
+    const { user } = req
+    res.status(200).send(user)
+  } catch (error) {
+    res.status(400).send(error)
+  }
+}
+
 export const register = async (req, res) => {
   try {
     const {
