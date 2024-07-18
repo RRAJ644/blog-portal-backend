@@ -9,7 +9,7 @@ import {
 import { authMiddleware } from '../middleware/authMiddleware.js'
 const userRouter = express.Router()
 
-userRouter.get('/user', currentUser)
+userRouter.get('/user', authMiddleware, currentUser)
 userRouter.post('/register', register)
 userRouter.post('/login', login)
 userRouter.put('/change-password', authMiddleware, changePassword)
