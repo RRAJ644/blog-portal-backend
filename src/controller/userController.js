@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs'
 
-export const currentUser = async () => {
+export const currentUser = async (req, res) => {
   try {
     const { user } = req
     res.status(200).send(user)
