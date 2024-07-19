@@ -62,18 +62,26 @@ export const changePassword = async (req, res) => {
       context: {
         models: { User },
       },
+
+      body: { password, newPassword },
       user,
     } = req
 
-    const {
-      body: { password },
-    } = req
+    if (!user) {
+      return res.status(400).send({ message: 'User not found' })
+    }
 
-    if (!user?._id) {
+    const existingUser = await User.findById(user._id)
+    if (!existingUser) {
       return res.status(400).send({ error: 'User not found' })
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10)
+    const passwordCorrect = await existingUser.isPasswordCorrect(password)
+    if (!passwordCorrect) {
+      return res.status(401).send({ message: 'Incorrect old password' })
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10)
 
     const updatedUser = await User.findByIdAndUpdate(
       user._id,
@@ -87,7 +95,7 @@ export const changePassword = async (req, res) => {
 
     res.status(200).send({ message: 'Password updated successfully' })
   } catch (error) {
-    res.status(400).send(error)
+    res.status(500).send(error)
   }
 }
 
