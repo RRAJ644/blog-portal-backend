@@ -22,6 +22,7 @@ const blogSchema = new Schema(
     tag: {
       type: String,
       index: true,
+      default: 'CRYPTOCURRENCY',
     },
     slug: {
       type: String,

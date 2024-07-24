@@ -6,9 +6,22 @@ export const publishBlog = async (req, res) => {
       context: {
         models: { Blog },
       },
+      body,
+      file,
     } = req
-    const { body } = req
-    const blog = await Blog.create({ ...body, status: BLOG_STATUS?.PUBLISHED })
+
+    const { content, title, slug } = body
+    const payload = {
+      title,
+      description: content,
+      thumbnail: `data:image/webp;base64,${file?.buffer?.toString('base64')}`,
+      slug,
+    }
+
+    const blog = await Blog.create({
+      ...payload,
+      status: BLOG_STATUS?.PUBLISHED,
+    })
     res.status(200).send(blog)
   } catch (error) {
     res.status(400).send(error)
@@ -84,16 +97,15 @@ export const getBlogs = async (req, res) => {
       context: {
         models: { Blog },
       },
-      query: { skip = 0, limit = 10 },
+      query: { status },
     } = req
 
-    const skipInt = parseInt(skip, 10)
-    const limitInt = parseInt(limit, 10)
-
-    const blogs = await Blog.find({ status: BLOG_STATUS?.PUBLISHED })
-      .skip(skipInt)
-      .limit(limitInt)
-      .sort({ date: -1 })
+    console.log(status)
+    const blogs = await Blog.find({
+      status: status === 'drafts' ? BLOG_STATUS.DRAFT : BLOG_STATUS?.PUBLISHED,
+    }).sort({
+      date: -1,
+    })
 
     res.status(200).send(blogs)
   } catch (error) {
@@ -108,13 +120,21 @@ export const saveAsDraft = async (req, res) => {
         models: { Blog },
       },
       body,
+      file,
     } = req
-    const draft = await Blog.create({ ...body, status: BLOG_STATUS?.DRAFT })
+
+    const { content, title, slug } = body
+
+    const payload = {
+      description: content,
+      title,
+      slug,
+      thumbnail: `data:image/webp;base64,${file.buffer.toString('base64')}`,
+    }
+
+    const draft = await Blog.create({ ...payload, status: BLOG_STATUS?.DRAFT })
     res.status(200).send(draft)
   } catch (error) {
     res.status(400).send(error)
   }
 }
-
-
-
