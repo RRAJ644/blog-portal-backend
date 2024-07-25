@@ -38,7 +38,7 @@ export const editBlog = async (req, res) => {
       body,
     } = req
 
-    const updatedBlog = await Blog.findByIdAndUpdate(id, body, { new: true })
+    const updatedBlog = await Blog.findOneAndUpdate(id, body, { new: true })
 
     if (!updatedBlog) {
       return res.status(404).send('Blog not found')
@@ -77,14 +77,10 @@ export const getBlog = async (req, res) => {
       context: {
         models: { Blog },
       },
-      params: { id, slug },
+      params: { id },
     } = req
 
-    const blog = await Blog.findOne({
-      _id: id,
-      slug,
-      status: BLOG_STATUS?.PUBLISHED,
-    })
+    const blog = await Blog.findById(id)
     res.status(200).send(blog)
   } catch (error) {
     res.status(400).send(error)

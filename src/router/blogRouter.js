@@ -16,14 +16,14 @@ const storage = multer.memoryStorage()
 const upload = multer({ storage })
 
 blogRouter.get('/blogs', getBlogs)
-blogRouter.get('/:slug', getBlog)
+blogRouter.get('/blog/:id', getBlog)
 blogRouter.post(
   '/publish',
   authMiddleware,
   upload.single('thumbnail'),
   publishBlog
 )
-blogRouter.put('/edit', authMiddleware, editBlog)
+blogRouter.put('/edit/:slug', authMiddleware, editBlog)
 blogRouter.delete('/delete', authMiddleware, deleteBlog)
 blogRouter.post(
   '/save-as-draft',
