@@ -7,6 +7,7 @@ import {
   getBlog,
   getBlogs,
   saveAsDraft,
+  publishDraft,
 } from '../controller/blogController.js'
 import multer from 'multer'
 
@@ -23,8 +24,13 @@ blogRouter.post(
   upload.single('thumbnail'),
   publishBlog
 )
-blogRouter.put('/edit/:slug', authMiddleware, editBlog)
-blogRouter.delete('/delete', authMiddleware, deleteBlog)
+blogRouter.put(
+  '/edit/:id',
+  authMiddleware,
+  upload.single('thumbnail'),
+  editBlog
+)
+blogRouter.delete('/delete/:id', authMiddleware, deleteBlog)
 blogRouter.post(
   '/save-as-draft',
   authMiddleware,
@@ -32,4 +38,5 @@ blogRouter.post(
   saveAsDraft
 )
 
+blogRouter.put('/publish-draft/:id', authMiddleware, publishDraft)
 export default blogRouter

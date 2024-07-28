@@ -6,11 +6,13 @@ export const publishBlog = async (req, res) => {
       context: {
         models: { Blog },
       },
+
       body,
       file,
     } = req
 
-    const { content, title, slug } = body
+    const { content, title, slug, id } = body
+
     const payload = {
       title,
       description: content,
@@ -22,6 +24,7 @@ export const publishBlog = async (req, res) => {
       ...payload,
       status: BLOG_STATUS?.PUBLISHED,
     })
+
     res.status(200).send(blog)
   } catch (error) {
     res.status(400).send(error)
@@ -36,17 +39,31 @@ export const editBlog = async (req, res) => {
       },
       params: { id },
       body,
+      file,
     } = req
 
-    const updatedBlog = await Blog.findOneAndUpdate(id, body, { new: true })
+    const { content, title, slug } = body
 
+    let payload = {
+      description: content,
+      title,
+      slug,
+    }
+
+    if (file) {
+      payload.thumbnail = `data:image/webp;base64,${file.buffer.toString(
+        'base64'
+      )}`
+    }
+
+    const updatedBlog = await Blog.findByIdAndUpdate(id, payload, { new: true })
     if (!updatedBlog) {
       return res.status(404).send('Blog not found')
     }
-
-    res.status(200).send(updatedBlog)
+    res.status(200).json(updatedBlog)
   } catch (error) {
-    res.status(400).send(error)
+    console.error(error)
+    res.status(500).send(error)
   }
 }
 
@@ -56,13 +73,13 @@ export const deleteBlog = async (req, res) => {
       context: {
         models: { Blog },
       },
-      params: { id, slug },
+      params: { id },
     } = req
 
-    const deletedBlog = await Blog.findOneAndDelete({ _id: id, slug })
+    const deletedBlog = await Blog.findByIdAndDelete(id)
 
     if (!deletedBlog) {
-      return res.status(404).send('Blog not found')
+      return res.status(404).send({ message: 'An Error Occurred' })
     }
 
     res.status(200).send({ message: 'Blog deleted successfully' })
@@ -121,16 +138,48 @@ export const saveAsDraft = async (req, res) => {
 
     const { content, title, slug } = body
 
-    const payload = {
+    let payload = {
       description: content,
       title,
       slug,
-      thumbnail: `data:image/webp;base64,${file.buffer.toString('base64')}`,
+    }
+
+    if (file) {
+      payload = {
+        ...payload,
+        thumbnail: `data:image/webp;base64,${file.buffer.toString('base64')}`,
+      }
     }
 
     const draft = await Blog.create({ ...payload, status: BLOG_STATUS?.DRAFT })
     res.status(200).send(draft)
   } catch (error) {
+    console.log(error, '===error')
     res.status(400).send(error)
+  }
+}
+
+export const publishDraft = async (req, res) => {
+  try {
+    const {
+      context: {
+        models: { Blog },
+      },
+      params: { id },
+    } = req
+
+    const draft = await Blog.findByIdAndUpdate(
+      id,
+      { status: BLOG_STATUS.PUBLISHED },
+      { new: true }
+    )
+
+    if (!draft) {
+      return res.status(404).send({ message: 'Draft not found' })
+    }
+
+    res.status(200).send({ message: 'Published Successfully', draft })
+  } catch (error) {
+    res.status(500).send({ message: 'An error occurred', error })
   }
 }

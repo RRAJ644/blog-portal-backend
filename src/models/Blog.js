@@ -4,7 +4,6 @@ const blogSchema = new Schema(
   {
     thumbnail: {
       type: String,
-      required: true,
     },
     title: {
       type: String,
