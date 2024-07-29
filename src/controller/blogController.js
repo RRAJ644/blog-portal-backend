@@ -113,12 +113,16 @@ export const getBlogs = async (req, res) => {
       query: { status },
     } = req
 
+    let filter
+
+    if (status === 'drafts') {
+      filter = BLOG_STATUS?.DRAFT
+    } else {
+      filter = BLOG_STATUS?.PUBLISHED
+    }
+
     console.log(status)
-    const blogs = await Blog.find({
-      status: status === 'drafts' ? BLOG_STATUS.DRAFT : BLOG_STATUS?.PUBLISHED,
-    }).sort({
-      date: -1,
-    })
+    const blogs = await Blog.find({ status: filter })
 
     res.status(200).send(blogs)
   } catch (error) {
