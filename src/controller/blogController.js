@@ -158,7 +158,6 @@ export const saveAsDraft = async (req, res) => {
     const draft = await Blog.create({ ...payload, status: BLOG_STATUS?.DRAFT })
     res.status(200).send(draft)
   } catch (error) {
-    console.log(error, '===error')
     res.status(400).send(error)
   }
 }
@@ -184,6 +183,29 @@ export const publishDraft = async (req, res) => {
 
     res.status(200).send({ message: 'Published Successfully', draft })
   } catch (error) {
-    res.status(500).send({ message: 'An error occurred', error })
+    res.status(500).send(error)
+  }
+}
+export const searchBlogs = async (req, res) => {
+  try {
+    const {
+      context: {
+        models: { Blog },
+      },
+      query: { search },
+    } = req
+
+    let query = {}
+
+    if (search && typeof search === 'string' && search.trim().length > 0) {
+      query = { title: { $regex: search, $options: 'i' } }
+    }
+
+    const blogs = await Blog.find(query)
+
+    res.status(200).send(blogs)
+  } catch (error) {
+    console.error('Error searching blogs:', error)
+    res.status(500).send({ message: 'An error occurred while searching blogs' })
   }
 }

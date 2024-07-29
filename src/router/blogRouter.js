@@ -8,6 +8,7 @@ import {
   getBlogs,
   saveAsDraft,
   publishDraft,
+  searchBlogs,
 } from '../controller/blogController.js'
 import multer from 'multer'
 
@@ -37,6 +38,8 @@ blogRouter.post(
   upload.single('thumbnail'),
   saveAsDraft
 )
+
+blogRouter.get('/search', authMiddleware, searchBlogs)
 
 blogRouter.put('/publish-draft/:id', authMiddleware, publishDraft)
 export default blogRouter
