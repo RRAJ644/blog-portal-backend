@@ -1,12 +1,12 @@
+dotenv.config()
 import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
-import { models } from './src/models/index.js'
-import { routes } from './src/router/index.js'
+import { models } from './models/index.js'
+import { routes } from './router/index.js'
 import dotenv from 'dotenv'
-import connectDB from './src/db/db.js'
+import connectDB from './db/db.js'
 
-dotenv.config()
 
 const app = express()
 const corsOptions = {
