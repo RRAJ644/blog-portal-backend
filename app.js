@@ -3,6 +3,10 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import { models } from './src/models/index.js'
 import { routes } from './src/router/index.js'
+import dotenv from 'dotenv'
+import connectDB from './src/db/db.js'
+
+dotenv.config()
 
 const app = express()
 const corsOptions = {
@@ -28,3 +32,14 @@ app.use('/', routes?.userRouter)
 app.use('/', routes?.blogRouter)
 
 export { app }
+
+
+connectDB()
+  .then(() => {
+    app.listen(process.env.PORT, async () => {
+      console.log(`Server is running at ${process.env.PORT || 9000}`)
+    })
+  })
+  .catch((err) => {
+    console.log('Connection Failed: ', err)
+  })
