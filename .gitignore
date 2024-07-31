@@ -70,3 +70,4 @@ config/config.json
 .DS_Store
 .vscode
 /.history
+.vercel
