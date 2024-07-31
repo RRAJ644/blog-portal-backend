@@ -31,8 +31,6 @@ app.use('/', routes?.testRouter)
 app.use('/', routes?.userRouter)
 app.use('/', routes?.blogRouter)
 
-export { app }
-
 connectDB()
   .then(() => {
     app.listen(process.env.PORT, async () => {
