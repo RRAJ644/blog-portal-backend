@@ -8,28 +8,28 @@ import dotenv from 'dotenv'
 import connectDB from './db/db.js'
 
 const app = express()
-const corsOptions = {
-  origin: process.env.CORS_ORIGIN,
-  // origin: 'http://localhost:5173',
-  credentials: true,
-}
-
-// const allowedOrigins = [
-//   'http://localhost:5173',
-//   'http://localhost:5174',
-// ];
 
 // const corsOptions = {
-//   origin: (origin, callback) => {
-//     if (allowedOrigins.includes(origin) || !origin) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error('Not allowed by CORS'));
-//     }
-//   },
+//   origin: process.env.CORS_ORIGIN,
+//   // origin: 'http://localhost:5173',
 //   credentials: true,
-// };
+// }
 
+const allowedOrigins = [
+  'https://wiseadvice.in',
+  'https://clever-bublanina-62161e.netlify.app',
+]
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+  credentials: true,
+}
 
 app.use(cors(corsOptions))
 app.use(express.json())
