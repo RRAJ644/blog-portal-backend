@@ -7,7 +7,6 @@ import { routes } from './router/index.js'
 import dotenv from 'dotenv'
 import connectDB from './db/db.js'
 
-
 const app = express()
 const corsOptions = {
   origin: process.env.CORS_ORIGIN,
@@ -28,11 +27,11 @@ app.use((req, res, next) => {
   next()
 })
 
+app.use('/', routes?.testRouter)
 app.use('/', routes?.userRouter)
 app.use('/', routes?.blogRouter)
 
 export { app }
-
 
 connectDB()
   .then(() => {
