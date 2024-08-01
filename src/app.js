@@ -18,6 +18,7 @@ const app = express()
 const allowedOrigins = [
   'https://wiseadvice.in',
   'https://clever-bublanina-62161e.netlify.app',
+  'http://localhost:5173',
 ]
 
 const corsOptions = {
