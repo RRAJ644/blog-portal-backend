@@ -121,9 +121,7 @@ export const getBlogs = async (req, res) => {
       filter = BLOG_STATUS?.PUBLISHED
     }
 
-
-    const blogs = await Blog.find({ status: filter })
-    
+    const blogs = await Blog.find({ status: filter }).sort({ createdAt: -1 })
 
     res.status(200).send(blogs)
   } catch (error) {
