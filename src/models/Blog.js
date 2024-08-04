@@ -38,6 +38,9 @@ const blogSchema = new Schema(
   }
 )
 
+blogSchema.index({ slug: 1 })
+blogSchema.index({ status: 1 })
+
 const Blog = new model('Blog', blogSchema)
 
 export default Blog
