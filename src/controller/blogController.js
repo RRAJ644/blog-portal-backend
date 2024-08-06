@@ -216,7 +216,11 @@ export const getSlugs = async (req, res) => {
         models: { Blog },
       },
     } = req
-    const slugs = await Blog.find().select('slug')
+    const slugs = await Blog.aggregate([
+      { $project: { _id: 0, slug: 1 } },
+      { $match: { slug: { $ne: null } } },
+      { $group: { _id: null, slugs: { $push: '$slug' } } },
+    ])
     res.status(200).send(slugs)
   } catch (error) {
     console.error('Error searching blogs:', error)
