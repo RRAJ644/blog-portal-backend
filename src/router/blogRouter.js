@@ -19,6 +19,8 @@ const upload = multer({ storage })
 
 blogRouter.get('/blogs', getBlogs)
 blogRouter.get('/blog/:id', getBlog)
+blogRouter.get('/slugs', searchBlogs)
+
 blogRouter.post(
   '/publish',
   authMiddleware,

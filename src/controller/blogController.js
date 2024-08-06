@@ -208,3 +208,18 @@ export const searchBlogs = async (req, res) => {
     res.status(500).send({ message: 'An error occurred while searching blogs' })
   }
 }
+
+export const getSlugs = async (req, res) => {
+  try {
+    const {
+      context: {
+        models: { Blog },
+      },
+    } = req
+    const slugs = await Blog.find().select('slug')
+    res.status(200).send(slugs)
+  } catch (error) {
+    console.error('Error searching blogs:', error)
+    res.status(500).send({ message: 'An error occurred while searching blogs' })
+  }
+}
