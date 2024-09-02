@@ -6,7 +6,6 @@ export const publishBlog = async (req, res) => {
       context: {
         models: { Blog },
       },
-
       body,
       file,
     } = req
