@@ -17,7 +17,7 @@ const app = express()
 
 const allowedOrigins = [
   'https://wiseadvice.in',
-  'https://clever-bublanina-62161e.netlify.app',
+  'https://clever-bublanina-62161e.netlify.app', // frontend origin of blog portal
   'http://localhost:5173',
 ]
 
